@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="./expense-tracker.css" />
+  <link rel="stylesheet" href="./querie.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:100,100italic,200,200italic,300,300italic,regular,italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic" rel="stylesheet" />
+</head>
+<body>
+  <div id="access-container">
+    <div id="login-form" class="access-form active">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="📩Email" required />
+      <input type="password" id="login-password" placeholder="🔑Password" required />
+      <button id="login-btn" type="button" onclick="loginSection()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="switchForm('signup')">Sign Up</a></p>
+    </div>
+
+    <div id="signup-form" class="access-form">
+      <h2>Sign Up</h2>
+      <input type="text" id="signup-name" placeholder="👤Your Name" required />
+      <input type="email" id="signup-email" placeholder="📩Email" required />
+      <input type="password" id="signup-password" placeholder="🔑Password" required />
+      <input type="number" id="age" placeholder="🔢Your Age" required />
+      <button id="signup-btn" type="button" onclick="signupSection()">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
+    </div>
+  </div>
+
+  <div class="container"> 
+    <button class="logout-btn" type="button">Log out</button>
+    <h1>Expense <span>Tracker</span></h1>
+
+    <div class="balance-container">
+      <h2>Your Balance👇</h2>
+      <h1 id="balance">$0.00</h1>
+      <div class="summary">
+        <div class="income">
+          <h3>Income</h3>
+          <p id="income-amount">$0.00</p>
+        </div>
+        <div class="expenses">
+          <h3>Expenses</h3>
+          <p id="expense-amount">$0.00</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="transaction-container">
+        <h2><i>Transactions</i></h2>
+        <ul id="transaction-list"> </ul>
+      </div>
+
+      <div class="form-container">
+        <h2><i>Add Transaction</i></h2>
+        <form id="transaction-form">
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" placeholder="Enter description..." required />
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" placeholder="Enter amount..." required />
+            <p class="negative-tranfer">Use negative (-) for expenses</p>
+          </div>
+          <button type="submit">Add Transaction</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
