@@ -45,18 +45,21 @@ function switchForm(name) {
 function login() {
   const email = document.getElementById("login-email").value.trim();
   const password = document.getElementById("login-password").value.trim();
-  const name = document.getElementById("signup-name").value.trim();
+
   if (!email || !password) {
     alert("Please enter both email and password.");
     return;
   }
-  const saveUsers = JSON.parse(localStorage.getItem("users")) || [];
-  const user = saveUsers.find((user) => user.email === email && user.password === password);
+
+  const savedUsers = JSON.parse(localStorage.getItem("users")) || [];
+  const user = savedUsers.find((u) => u.email === email && u.password === password);
+
   if (user) {
-    alert(`Welcome ${name}`);
+    alert(`Welcome ${user.name}`);
     currentUser = email;
     localStorage.setItem("currentUser", currentUser);
     document.getElementById("access-container").style.display = "none";
+    document.querySelector(".container").style.display = "block";
     loadTransactions();
     updateTransactionList();
     updateSummary();
@@ -70,17 +73,21 @@ function signup() {
   const email = document.getElementById("signup-email").value.trim();
   const password = document.getElementById("signup-password").value.trim();
   const name = document.getElementById("signup-name").value.trim();
-  if (!email || !password) {
-    alert("Please enter both email and password.");
+
+  if (!email || !password || !name) {
+    alert("Please fill in all fields.");
     return;
   }
-  let saveUsers = JSON.parse(localStorage.getItem("users")) || [];
-  if (saveUsers.some((user) => user.email === email)) {
+
+  let savedUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+  if (savedUsers.some((user) => user.email === email)) {
     alert("User already exists with that email");
     return;
   }
-  saveUsers.push({ email, password, name });
-  localStorage.setItem("users", JSON.stringify(saveUsers));
+
+  savedUsers.push({ email, password, name });
+  localStorage.setItem("users", JSON.stringify(savedUsers));
   alert("Signup successful! You can now log in.");
   switchForm("login");
   signupForm.reset();
@@ -106,13 +113,16 @@ function addTransaction(e) {
     alert("Please log in to add transactions.");
     return;
   }
+
   const description = descriptionEl.value.trim();
   const amount = parseFloat(amountEl.value);
+
   if (!description || isNaN(amount)) {
     alert("Please enter a valid description and amount.");
     return;
   }
-  const id = Date.now();
+
+  const id = crypto.randomUUID(); // Better than Date.now() for uniqueness
   transactions.push({ id, description, amount });
   saveTransactions();
   updateTransactionList();
@@ -144,7 +154,7 @@ function createTransactionElement(transaction) {
     <span>${transaction.description}</span>
     <span>
       ${formatCurrency(transaction.amount)}
-      <button class="delete-btn" onclick="removeTransaction(${transaction.id})">x</button>
+      <button class="delete-btn" onclick="removeTransaction('${transaction.id}')">x</button>
     </span>
   `;
   return liTag;

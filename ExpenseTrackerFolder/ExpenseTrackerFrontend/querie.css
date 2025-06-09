@@ -1,14 +1,22 @@
-@media(max-width: 45rem){
-    h1 {
-        font-size: 2rem;
-    }
+@media (max-width: 768px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
 
-    .form-container h2{
-        font-size: 1.5rem;
-    }
+  .summary {
+    grid-template-columns: 1fr;
+  }
 
-    .transaction {
-        gap: 2rem;
-    }
+  .container {
+    padding: 1rem;
+  }
 
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  .access-form {
+    width: 90%;
+    padding: 2rem;
+  }
 }

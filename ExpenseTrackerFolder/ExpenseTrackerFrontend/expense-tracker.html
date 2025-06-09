@@ -27,9 +27,9 @@
       <button id="signup-btn" type="button" onclick="signupSection()">Sign Up</button>
       <p>Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
     </div>
-  </div>
+   </div>
 
-  <div class="container"> 
+     <div class="container"> 
     <button class="logout-btn" type="button">Log out</button>
     <h1>Expense <span>Tracker</span></h1>
 
@@ -48,7 +48,12 @@
       </div>
     </div>
 
-
+    <div class="main-content">
+      <div class="transaction-container">
+        <h2><i>Transactions</i></h2>
+        <input type="text" id="search" placeholder="🔍Search Transaction" />
+        <ul id="transaction-list"> </ul>
+    </div>
 
       <div class="form-container">
         <h2><i>Add Transaction</i></h2>
@@ -68,6 +73,6 @@
 
     </div>
   </div>
-  <script src="script.js"></script>
+  <script src="expense-tracker.js"></script>
 </body>
 </html>
