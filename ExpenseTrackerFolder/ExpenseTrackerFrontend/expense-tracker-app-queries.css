@@ -1,0 +1,44 @@
+@media (max-width: 768px) {
+  body {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .container {
+    padding: 1rem 1.5rem;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  #access-container {
+    padding: 1rem;
+  }
+
+  .access-form {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 590px) {
+  .balance-container h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .income, .expenses {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+

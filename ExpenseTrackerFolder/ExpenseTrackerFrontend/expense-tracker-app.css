@@ -9,9 +9,10 @@ body {
   margin: 0 auto;
   font-family: "Poppins", sans-serif;
   color: #2d3436;
-  background-image: url("images/photo-1502899576159-f224dc2349fa.avif");
+  background-image: url("images/istockphoto-583726578-612x612.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 #access-container {
@@ -27,16 +28,15 @@ body {
   z-index: 1000;
   font-family: "Poppins", sans-serif;
   opacity: 1;
-  background-image: url("images/photo-1502899576159-f224dc2349fa.avif");
+  background-image: url("images/istockphoto-583726578-612x612.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .access-form {
-  background-color: #1e1e1e;
   padding: 2.5rem 3rem;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 25px 20px rgba(0, 0, 0, 0.897);
   width: 360px;
   color: #f0f0f0;
   display: none;
@@ -121,8 +121,7 @@ body {
 .container {
   padding: 0.5rem 3rem;
   border-radius: 24px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.938);
-  background-image: url("images/photo-1502899576159-f224dc2349fa.avif");
+  box-shadow: 0 12px 24px rgb(75, 44, 44);
 }
 
 h1 {
@@ -164,7 +163,7 @@ h2 {
 
 
 .balance-container h2{
-  color: #1a1818;
+  color: #FAFAFA;
   text-transform: uppercase;
 }
 
@@ -316,6 +315,9 @@ h2 {
   display: flex;
   flex-direction: column;
   position: relative;
+  background-image: url("images/istockphoto-583726578-612x612.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .form-container form {
@@ -331,7 +333,7 @@ h2 {
 label {
   display: block;
   padding-bottom: 8px;
-  color: #111;
+  color: #FAFAFA;
   font-weight: 600;
 }
 
@@ -342,7 +344,8 @@ input {
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s ease;
-  background-color: white;
+  background-color: #000;
+  color: #FAFAFA;
 }
 
 input:focus {
@@ -406,7 +409,7 @@ button:hover {
     color: #f08c8c;
     font-size: 1rem;
     font-weight: 700;
-    padding: 1rem 0;
+    padding-top: 1rem;
 }
 
 .footer p a{
