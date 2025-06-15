@@ -5,14 +5,22 @@
 }
 
 body {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   font-family: "Poppins", sans-serif;
   color: #2d3436;
-  background-image: url("images/istockphoto-583726578-612x612.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
+}
+
+#video{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover;
 }
 
 #access-container {
@@ -21,28 +29,79 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(10, 10, 10, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
   font-family: "Poppins", sans-serif;
   opacity: 1;
-  background-image: url("images/istockphoto-583726578-612x612.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .access-form {
   padding: 2.5rem 3rem;
   border-radius: 16px;
-  box-shadow: 0 0 25px 20px rgba(0, 0, 0, 0.897);
+  box-shadow: 0 0 25px 20px rgba(129, 126, 126, 0.897);
   width: 360px;
   color: #f0f0f0;
   display: none;
   flex-direction: column;
   gap: 1.25rem;
   transition: opacity 0.3s ease;
+  position: relative;
+}
+
+.user-icon{
+  position: absolute;
+  top: 38.6%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
+}
+
+.user-icon-login{
+  position: absolute;
+  top: 49%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
+}
+
+.password-icon-login{
+  position: absolute;
+  top: 62%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
+}
+
+.email-icon{
+  position: absolute;
+  top: 49%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
+}
+
+.password-icon{
+  position: absolute;
+  top: 59.5%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
+}
+
+.age-icon{
+  position: absolute;
+  top: 70%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: #059669;
+  font-size: 1.3rem;
 }
 
 .access-form.active {
@@ -59,7 +118,7 @@ body {
 }
 
 .access-form input {
-  padding: 12px 16px;
+  padding: 12px 30px;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -67,6 +126,7 @@ body {
   color: #f0f0f0;
   box-shadow: inset 0 0 5px rgba(0,0,0,0.8);
   transition: all 0.3s ease;
+  padding-left: 35px ;
 }
 
 .access-form input::placeholder {
@@ -100,7 +160,7 @@ body {
 
 .access-form p {
   text-align: center;
-  color: #aaa;
+  color: #555;
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
@@ -120,8 +180,10 @@ body {
 
 .container {
   padding: 0.5rem 3rem;
-  border-radius: 24px;
   box-shadow: 0 12px 24px rgb(75, 44, 44);
+  background-image: url("images/photo-1622737133809-d95047b9e673.avif");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 h1 {
@@ -165,6 +227,31 @@ h2 {
 .balance-container h2{
   color: #FAFAFA;
   text-transform: uppercase;
+}
+
+.arrow-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.arrow-icons {
+  display: flex;
+  flex-direction: column;
+  font-size: 30px;
+  color: #059669;
+}
+
+.arrow-icons ion-icon:nth-child(1) {
+  animation: flow-down 2s infinite;
+  animation-delay: 0.5s;
+}
+
+.arrow-icons ion-icon:nth-child(2) {
+  animation: flow-down 2s infinite;
+  animation-delay: 1s;
 }
 
 .summary {
@@ -237,20 +324,40 @@ h2 {
   flex-direction: column;
 }
 
+.search-bar-container{
+  position: relative; 
+}
+
+.search-icon:hover {
+  color: #14e9a5;
+  cursor: pointer;
+}
+
+#search{
+  width: 81.5%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #000;
+  color: #FAFAFA;
+}
+
 #transaction-list {
   list-style: none;
   max-height: 500px;
   overflow-y: auto;
   padding-right: 8px;
   flex-grow: 1;
-  padding: 1rem;
+  margin: 1rem 0;
 }
 
 .transaction {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.2rem;
+  padding: 1rem;
   margin-bottom: 12px;
   border-radius: 12px;
   background-color: #fff;
@@ -258,18 +365,6 @@ h2 {
   transition: all 0.2s ease;
   border-right: 5px solid;
   animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0px);
-  }
 }
 
 .transaction:hover {
@@ -337,7 +432,7 @@ label {
   font-weight: 600;
 }
 
-input {
+#description, #amount {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e2e8f0;
@@ -382,10 +477,6 @@ button:hover {
   box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
 }
 
-#search{
-  margin-bottom: 1rem;
-}
-
 .logout-btn{
   font-size: 1rem;
   font-weight: 600;
@@ -405,14 +496,102 @@ button:hover {
 }
 
 .footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
     text-align: center;
     color: #f08c8c;
     font-size: 1rem;
     font-weight: 700;
-    padding-top: 1rem;
+    padding-top: 5rem;
 }
 
 .footer p a{
     text-decoration: none;
     color:  #d3c7c7;
+}
+
+.logo-whatsapp{
+  font-size: 1.5rem;
+  color: #25D366;
+}
+
+.whatsapp, 
+.github, 
+.linkedin,
+.facebook{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.whatsapp a{
+  text-decoration: none;
+  color: #25D366;
+  font-weight: 600;
+}
+
+.logo-github{
+  font-size: 1.5rem;
+  color: #FAFAFA;
+}
+
+.github a{
+  text-decoration: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.logo-linkedin{
+  font-size: 1.5rem;
+  color: #0077b5;
+}
+
+.linkedin a{
+  text-decoration: none;
+  color: #0077b5;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.logo-facebook{
+  font-size: 1.5rem;
+  color: #3b5998;
+}
+
+.facebook a{
+  text-decoration: none;
+  color: #3b5998;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes flow-down {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
 }

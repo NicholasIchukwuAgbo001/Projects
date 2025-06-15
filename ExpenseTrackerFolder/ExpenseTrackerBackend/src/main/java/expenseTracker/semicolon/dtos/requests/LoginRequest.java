@@ -3,7 +3,7 @@ package expenseTracker.semicolon.dtos.requests;
 import lombok.Data;
 
 @Data
-public class UserLoginRequest {
+public class LoginRequest {
     private String email;
     private String password;
 }
