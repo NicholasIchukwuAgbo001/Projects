@@ -1,4 +1,4 @@
-package expenseTracker.semicolon.utils.responses;
+package expenseTracker.semicolon.dtos.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

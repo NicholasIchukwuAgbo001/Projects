@@ -1,7 +1,7 @@
 package expenseTracker.semicolon.controller;
 
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
-import expenseTracker.semicolon.utils.responses.RegisterResponse;
+import expenseTracker.semicolon.dtos.responses.RegisterResponse;
 import expenseTracker.semicolon.services.TransactionService;
 import org.springframework.web.bind.annotation.*;
 

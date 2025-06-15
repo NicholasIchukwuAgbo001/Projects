@@ -1,0 +1,49 @@
+@startuml
+
+class UserController
+class TransactionController
+
+class UserService
+class TransactionService
+
+interface UserRepository
+interface TransactionRepository
+
+class User
+class Transaction
+
+class RegisterRequest
+class LoginRequest
+class TransactionRequest
+class RegisterResponse
+class LoginResponse
+
+class Mapper
+
+class AppException
+class GlobalExceptionHandler
+
+UserController --> UserService
+TransactionController --> TransactionService
+
+UserService --> UserRepository
+UserService --> Mapper
+UserService --> AppException
+
+TransactionService --> TransactionRepository
+TransactionService --> Mapper
+TransactionService --> AppException
+
+UserRepository --> User
+TransactionRepository --> Transaction
+
+RegisterResponse --> Transaction
+
+Mapper --> RegisterRequest
+Mapper --> TransactionRequest
+Mapper --> User
+Mapper --> Transaction
+
+GlobalExceptionHandler --> AppException
+
+@enduml

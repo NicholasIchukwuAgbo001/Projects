@@ -2,7 +2,7 @@ package expenseTracker.semicolon.controller;
 
 import expenseTracker.semicolon.dtos.requests.LoginRequest;
 import expenseTracker.semicolon.dtos.requests.RegisterRequest;
-import expenseTracker.semicolon.utils.responses.LoginResponse;
+import expenseTracker.semicolon.dtos.responses.LoginResponse;
 import expenseTracker.semicolon.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

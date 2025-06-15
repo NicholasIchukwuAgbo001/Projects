@@ -1,0 +1,11 @@
+@startuml UseCaseDiagram
+
+actor User
+
+User --> (Register)
+User --> (Login)
+User --> (Add Transaction)
+User --> (View Transactions)
+User --> (Delete Transaction)
+
+@enduml
