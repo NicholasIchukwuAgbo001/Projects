@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>6.4.3</version> <!-- Secure patched version -->
+            <version>6.4.3</version>
         </dependency>
 
         <!-- Lombok for boilerplate code -->

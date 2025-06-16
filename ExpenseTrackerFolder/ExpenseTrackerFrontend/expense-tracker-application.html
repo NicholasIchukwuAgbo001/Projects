@@ -31,6 +31,13 @@
       </div>
       <form id="login-form" class="access-form active">
         <h2>Login</h2>
+        <div class="profile-img">
+          <img
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            alt="Profile Image"
+            class="profile-image"
+          />
+        </div>
         <p>Welcome back! Please login to continue.</p>
         <ion-icon name="person" class="user-icon-login"></ion-icon>
         <input
@@ -101,7 +108,6 @@
     <div class="container">
       <h2 id="welcome-message"></h2>
       <h1>Expense <span>Tracker</span></h1>
-
       <div class="balance-container">
         <div class="arrow-box">
           <h2>Your Balance</h2>
@@ -154,13 +160,22 @@
               />
               <p class="negative-tranfer">Use negative (-) for expenses</p>
             </div>
-            <button type="submit">Add Transaction</button>
+            <button class="add-btn" type="submit">Add Transaction</button>
           </form>
         </div>
       </div>
 
-      <button class="logout-btn" type="button">Log out</button>
+      <div class="naira-container">
+        <div>
+          <button class="logout-btn" type="button">Log out</button>
+        </div>
 
+        <div  class="naira-images">
+          <img src="images/istockphoto-2176574609-612x612.jpg" alt="naira-image" class="naira-image" />
+          <img src="images/istockphoto-1462916074-612x612.jpg" alt="naira-image" class="naira-image" />
+          <img src="images/istockphoto-1061369956-612x612.jpg" alt="naira-image" class="naira-image" />
+        </div>
+      </div>
       <div class="footer">
         <p>
           Made with ❤️ by

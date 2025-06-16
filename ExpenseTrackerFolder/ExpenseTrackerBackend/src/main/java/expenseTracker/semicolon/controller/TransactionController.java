@@ -1,33 +1,39 @@
 package expenseTracker.semicolon.controller;
 
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
-import expenseTracker.semicolon.dtos.responses.RegisterResponse;
+import expenseTracker.semicolon.dtos.responses.TransactionResponse;
 import expenseTracker.semicolon.services.TransactionService;
+import expenseTracker.semicolon.utils.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
-@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class TransactionController {
 
     private final TransactionService transactionService;
 
+    @Autowired
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
-    @PostMapping
-    public RegisterResponse addTransaction(@RequestBody TransactionRequest request) {
-        return transactionService.addTransaction(request);
+    @PostMapping("/request")
+    public ApiResponse addTransaction(@RequestBody TransactionRequest request) {
+        TransactionResponse response = transactionService.addTransaction(request);
+        return new ApiResponse("Transaction added successfully", true, List.of(response));
     }
 
     @GetMapping("/{userId}")
-    public RegisterResponse getTransactions(@PathVariable String userId) {
-        return transactionService.getTransactions(userId);
+    public ApiResponse getTransactions(@PathVariable String userId) {
+        List<TransactionResponse> transactions = transactionService.getTransactions(userId);
+        return new ApiResponse("Transactions retrieved successfully", true, transactions);
     }
 
     @DeleteMapping("/{id}")
-    public RegisterResponse deleteTransaction(@PathVariable String id) {
+    public ApiResponse deleteTransaction(@PathVariable String id) {
         return transactionService.deleteTransaction(id);
     }
 }

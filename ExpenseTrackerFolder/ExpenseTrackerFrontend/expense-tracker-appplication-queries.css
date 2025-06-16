@@ -1,4 +1,4 @@
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .container {
     padding: 1rem;
   }
@@ -41,9 +41,10 @@
   }
 
   #search {
-    width: 100%;
+    width: 80%;
     font-size: 0.95rem;
   }
+
 
   .logout-btn {
     font-size: 0.95rem;
@@ -51,17 +52,17 @@
   }
 
   .user-icon-login{
-    top: 43%;
+    top: 57%;
     left: 7%;
   }
 
  .password-icon-login{
-    top: 59%;
+    top: 68%;
     left: 7%;
  }
 
  .user-icon{
-  top: 33%;
+  top: 34%;
   left: 7%;
  }
 

@@ -229,7 +229,7 @@ async function addTransaction(e) {
   }
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/transactions`, {
+    const res = await fetch(`${BACKEND_URL}/api/transactions/request`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: currentUser, description, amount }),

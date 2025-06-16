@@ -3,7 +3,8 @@ package expenseTracker.semicolon.services;
 import expenseTracker.semicolon.data.models.Transaction;
 import expenseTracker.semicolon.data.repository.TransactionRepository;
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
-import expenseTracker.semicolon.dtos.responses.RegisterResponse;
+import expenseTracker.semicolon.dtos.responses.TransactionResponse;
+import expenseTracker.semicolon.utils.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TransactionServiceTest {
 
     @Autowired
-    private TransactionService transactionService;
+    private TransactionServiceImpl transactionService;
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -34,15 +35,14 @@ public class TransactionServiceTest {
         request.setAmount(1200.00);
         request.setUserId("1122");
 
-        RegisterResponse response = transactionService.addTransaction(request);
+        TransactionResponse response = transactionService.addTransaction(request);
 
-        assertTrue(response.isSuccess());
-        assertEquals("Transaction added successfully", response.getMessage());
+        assertNotNull(response.getId());
+        assertEquals("Lunch", response.getDescription());
+        assertEquals(1200.00, response.getAmount());
 
         List<Transaction> transactions = transactionRepository.findAllByUserId("1122");
         assertEquals(1, transactions.size());
-        assertEquals("Lunch", transactions.getFirst().getDescription());
-        assertEquals(1200.00, transactions.getFirst().getAmount());
     }
 
     @Test
@@ -54,14 +54,11 @@ public class TransactionServiceTest {
         transactionRepository.save(t2);
         transactionRepository.save(t3);
 
-        RegisterResponse response = transactionService.getTransactions("1111");
+        List<TransactionResponse> responses = transactionService.getTransactions("1111");
 
-        assertTrue(response.isSuccess());
-        assertEquals("Transactions retrieved", response.getMessage());
-
-        List<Transaction> transactions = response.getTransactions();
-        assertNotNull(transactions);
-        assertEquals(2, transactions.size());
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+        assertEquals("Ewa", responses.getFirst().getDescription());
     }
 
     @Test
@@ -69,7 +66,7 @@ public class TransactionServiceTest {
         Transaction t = new Transaction(null, "Subscription", 1500.00, "3333");
         Transaction saved = transactionRepository.save(t);
 
-        RegisterResponse response = transactionService.deleteTransaction(saved.getId());
+        ApiResponse response = transactionService.deleteTransaction(saved.getId());
 
         assertTrue(response.isSuccess());
         assertEquals("Transaction deleted successfully", response.getMessage());
@@ -79,12 +76,9 @@ public class TransactionServiceTest {
 
     @Test
     public void testDeleteTransaction_transactionNotFound() {
-        RegisterResponse response = transactionService.deleteTransaction("0000");
+        ApiResponse response = transactionService.deleteTransaction("0000");
 
         assertFalse(response.isSuccess());
         assertEquals("Transaction not found", response.getMessage());
     }
 }
-
-
-
