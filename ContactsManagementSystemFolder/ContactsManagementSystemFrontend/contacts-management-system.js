@@ -86,13 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadContacts = () => {
     const saved = JSON.parse(localStorage.getItem("contacts")) || [];
     tableBody.innerHTML = ""; 
-    saved.forEach(c => {
+    saved.forEach(contact => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${c.name}</td>
-        <td>${c.email}</td>
-        <td>${c.phone}</td>
-        <td>${c.job}</td>
+        <td>${contact.name}</td>
+        <td>${contact.email}</td>
+        <td>${contact.phone}</td>
+        <td>${contact.job}</td>
         <td><button class="delete-btn">Delete</button></td>
       `;
       tableBody.appendChild(row);
