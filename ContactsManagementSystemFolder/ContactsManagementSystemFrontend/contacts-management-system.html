@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Contacts</title>
+  <link rel="stylesheet" href="contacts-management-system.css">
+  <link rel="stylesheet" href="contacts-management-system-queries.css">
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+  <div class="wrapper">
+      <div id="access-container">
+      <form id="login-form" class="access-form active">
+        <h2>Login</h2>
+        <div class="profile-img">
+          <img
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            alt="Profile Image"
+            class="profile-image"
+          />
+        </div>
+        <p>Welcome back! Please login to continue.</p>
+        <input
+          type="email"
+          id="login-email"
+          name="login-email"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          id="login-password"
+          name="login-password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+        <p>
+          Don't have an account?
+         <a href="#" onclick="switchForm('signup')">Sign Up</a>
+        </p>
+      </form>
+
+      <form id="signup-form" class="access-form">
+        <h2>Sign Up</h2>
+        <input
+          type="number"
+          id="signup-number"
+          name="signup-number"
+          placeholder="Your phone number"
+          required
+        />
+        <input
+          type="email"
+          id="signup-email"
+          name="signup-email"
+          placeholder="Email"
+          required
+        />
+        <input
+          type="password"
+          id="signup-password"
+          name="signup-password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Sign Up</button>
+        <p>
+          Already have an account?
+          <a href="#" onclick="switchForm('login')">Login</a>
+        </p>
+      </form>
+    </div>
+
+    <div class="main">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <ion-icon name="menu-outline" class="menue-icon"></ion-icon>
+         <ion-icon name="person-sharp" class="contact-icon"></ion-icon>
+         <h2>Contacts</h2>
+      </div>
+      <button class="create-contact-btn"><ion-icon name="person-add" class="add-icon"></ion-icon>Create contact</button>
+      <div class="sidebar-count">
+        <ion-icon name="people-sharp" class="contact-icon-two"></ion-icon>
+        <h3>Contacts</h3>
+        <span class="count"></span>
+      </div>
+      <ul class="menu">
+        <li> <ion-icon name="refresh" class="listed-icon"></ion-icon> Frequent</li>
+        <li> <ion-icon name="archive-outline" class="listed-icon"></ion-icon> Other contacts</li>
+      </ul>
+      <div class="fix-manage">
+        <h4> Fix & manage </h4>
+        <ul>
+          <li> <ion-icon name="hammer-outline" class="listed-icon"></ion-icon> Merge & fix </li>
+          <li> <ion-icon name="swap-vertical-outline" class="listed-icon"></ion-icon> Import </li>
+          <li> <ion-icon name="trash-outline" class="listed-icon"></ion-icon> Trash </li>
+        </ul>
+      </div>
+      <div class="labels">
+        <h4>Labels</h4>
+        <ion-icon name="add-outline" class="listed-icon"></ion-icon>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="top-bar">
+        <input type="text" class="search-bar" placeholder="Search" />
+        <div class="settings">
+          <div class="avatar">I</div>
+        </div>
+      </div>
+
+      <section class="contacts-section">
+        <h2>Contacts <span class="count"></span></h2>
+        <table class="contacts-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone number</th>
+              <th>Job title & company</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="contacts-label"><td colspan="5">Contacts</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+  </div>
+  <script src="contacts-management-system.js"></script>
+</body>
+</html>

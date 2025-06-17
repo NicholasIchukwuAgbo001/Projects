@@ -292,13 +292,13 @@ logoutBtn.addEventListener("click", () => {
   updateSummary();
 });
 
-loginForm.addEventListener("submit", e => {
-  e.preventDefault();
+loginForm.addEventListener("submit", element => {
+  element.preventDefault();
   login();
 });
 
-signupForm.addEventListener("submit", e => {
-  e.preventDefault();
+signupForm.addEventListener("submit", element => {
+  element.preventDefault();
   signup();
 });
 
