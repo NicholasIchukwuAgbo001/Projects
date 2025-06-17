@@ -232,13 +232,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       } else {
         fields.forEach(cell => {
-          cell.innerHTML = cell.textContent; // remove previous mark
+          cell.innerHTML = cell.textContent; 
         });
       }
     });
   });
 
-  // Auto-login if user is still in session
   const storedUser = localStorage.getItem("currentUser");
   if (storedUser) {
     currentUser = storedUser;
