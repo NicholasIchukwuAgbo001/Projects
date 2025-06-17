@@ -326,27 +326,20 @@ body {
 
 .modal {
   background: white;
-  padding: 20px 30px;
+  padding: 2rem;
   border-radius: 8px;
-  width: 320px;
-  box-shadow: 0 0 10px #333;
+  width: 300px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
 .modal h3 {
-  margin-top: 0;
-  text-align: center;
+  margin-bottom: 1rem;
 }
-
 .modal input {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  box-sizing: border-box;
+  padding: 0.5rem;
 }
-
 .modal button {
-  margin-top: 10px;
-  margin-right: 10px;
-  padding: 8px 16px;
-  cursor: pointer;
+  margin-right: 1rem;
+  padding: 0.5rem 1rem;
 }
