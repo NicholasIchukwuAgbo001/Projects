@@ -3,11 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.querySelector(".contacts-table tbody");
   const countElement = document.querySelectorAll(".count");
   const searchInput = document.querySelector(".search-bar");
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const accessContainer = document.getElementById("access-container");
+  const mainContainer = document.querySelector(".main");
 
   window.switchForm = function (form) {
-    const loginForm = document.getElementById("login-form");
-    const signupForm = document.getElementById("signup-form");
-
     if (form === "signup") {
       loginForm.classList.remove("active");
       signupForm.classList.add("active");
@@ -17,6 +18,50 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  signupForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value.trim();
+
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    const existingUser = users.find(user => user.email === email);
+
+    if (existingUser) {
+      alert("User already exists. Please log in.");
+      return;
+    }
+
+    users.push({ email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Signup successful. Please log in.");
+    switchForm("login");
+  });
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (!user) {
+      alert("Invalid email or password.");
+      return;
+    }
+
+    accessContainer.style.display = "none";
+    mainContainer.style.display = "flex";
+    loadContacts();
+  });
 
   const updateCount = () => {
     const contactRows = tableBody.querySelectorAll("tr:not(.contacts-label)");
@@ -25,16 +70,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  function addDeleteListeners() {
+  const saveContacts = () => {
+    const rows = tableBody.querySelectorAll("tr:not(.contacts-label)");
+    const contacts = Array.from(rows).map(row => {
+      return {
+        name: row.children[0].textContent,
+        email: row.children[1].textContent,
+        phone: row.children[2].textContent,
+        job: row.children[3].textContent
+      };
+    });
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+  };
+
+  const loadContacts = () => {
+    const saved = JSON.parse(localStorage.getItem("contacts")) || [];
+    tableBody.innerHTML = ""; 
+    saved.forEach(c => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${c.name}</td>
+        <td>${c.email}</td>
+        <td>${c.phone}</td>
+        <td>${c.job}</td>
+        <td><button class="delete-btn">Delete</button></td>
+      `;
+      tableBody.appendChild(row);
+    });
+    addDeleteListeners();
+    updateCount();
+  };
+
+  const addDeleteListeners = () => {
     tableBody.querySelectorAll(".delete-btn").forEach(btn => {
       btn.onclick = () => {
         if (confirm("Are you sure you want to delete this contact?")) {
           btn.closest("tr").remove();
+          saveContacts();
           updateCount();
         }
       };
     });
-  }
+  };
 
   const showForm = () => {
     const modal = document.createElement("div");
@@ -80,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       tableBody.appendChild(row);
       addDeleteListeners();
+      saveContacts();
       updateCount();
       modal.remove();
     };
@@ -104,7 +182,4 @@ document.addEventListener("DOMContentLoaded", () => {
       ) ? "" : "none";
     });
   });
-
-  addDeleteListeners();
-  updateCount();
 });

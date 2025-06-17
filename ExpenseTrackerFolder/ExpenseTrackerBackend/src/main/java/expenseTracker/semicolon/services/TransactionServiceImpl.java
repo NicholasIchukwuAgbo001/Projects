@@ -4,7 +4,7 @@ import expenseTracker.semicolon.data.models.Transaction;
 import expenseTracker.semicolon.data.repository.TransactionRepository;
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
 import expenseTracker.semicolon.dtos.responses.TransactionResponse;
-import expenseTracker.semicolon.utils.ApiResponse;
+import expenseTracker.semicolon.dtos.responses.ApiResponse;
 import expenseTracker.semicolon.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

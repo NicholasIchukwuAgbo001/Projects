@@ -4,7 +4,7 @@ import expenseTracker.semicolon.data.models.Transaction;
 import expenseTracker.semicolon.data.repository.TransactionRepository;
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
 import expenseTracker.semicolon.dtos.responses.TransactionResponse;
-import expenseTracker.semicolon.utils.ApiResponse;
+import expenseTracker.semicolon.dtos.responses.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

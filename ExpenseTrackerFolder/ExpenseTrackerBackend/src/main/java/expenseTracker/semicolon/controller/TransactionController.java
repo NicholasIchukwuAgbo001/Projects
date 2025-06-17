@@ -3,7 +3,7 @@ package expenseTracker.semicolon.controller;
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
 import expenseTracker.semicolon.dtos.responses.TransactionResponse;
 import expenseTracker.semicolon.services.TransactionService;
-import expenseTracker.semicolon.utils.ApiResponse;
+import expenseTracker.semicolon.dtos.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -2,7 +2,7 @@ package expenseTracker.semicolon.services;
 
 import expenseTracker.semicolon.dtos.requests.TransactionRequest;
 import expenseTracker.semicolon.dtos.responses.TransactionResponse;
-import expenseTracker.semicolon.utils.ApiResponse;
+import expenseTracker.semicolon.dtos.responses.ApiResponse;
 
 import java.util.List;
 

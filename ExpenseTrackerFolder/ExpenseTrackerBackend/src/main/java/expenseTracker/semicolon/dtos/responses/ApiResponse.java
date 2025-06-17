@@ -1,6 +1,5 @@
-package expenseTracker.semicolon.utils;
+package expenseTracker.semicolon.dtos.responses;
 
-import expenseTracker.semicolon.dtos.responses.TransactionResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
