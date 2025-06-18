@@ -1,56 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const createBtn = document.querySelector(".create-contact-btn");
-  const tableBody = document.querySelector(".contacts-table tbody");
-  const countElement = document.querySelectorAll(".count");
-  const searchInput = document.querySelector(".search-bar");
-  const loginForm = document.getElementById("login-form");
-  const signupForm = document.getElementById("signup-form");
-  const accessContainer = document.getElementById("access-container");
-  const mainContainer = document.querySelector(".main");
-  const logoutBtn = document.querySelector(".logout-btn");
+  const createContactButton = document.querySelector(".create-contact-btn");
+  const contactsTableBody = document.querySelector(".contacts-table tbody");
+  const contactCountDisplays = document.querySelectorAll(".count");
+  const searchInputField = document.querySelector(".search-bar");
+  const loginFormElement = document.getElementById("login-form");
+  const signupFormElement = document.getElementById("signup-form");
+  const loginSignupSection = document.getElementById("access-container");
+  const mainContactsSection = document.querySelector(".main");
+  const logoutButton = document.querySelector(".logout-btn");
 
-  let currentUser = null;
+  let loggedInUserEmail = null;
 
-  window.switchForm = function (form) {
-    if (form === "signup") {
-      loginForm.classList.remove("active");
-      signupForm.classList.add("active");
+  window.switchForm = function (formType) {
+    if (formType === "signup") {
+      loginFormElement.classList.remove("active");
+      signupFormElement.classList.add("active");
     } else {
-      signupForm.classList.remove("active");
-      loginForm.classList.add("active");
+      signupFormElement.classList.remove("active");
+      loginFormElement.classList.add("active");
     }
   };
 
-  const getUserKey = (email) => `contacts_${email}`;
+  const getUserStorageKey = (email) => `contacts_${email}`;
 
-  const saveContacts = () => {
-    const rows = tableBody.querySelectorAll("tr:not(.contacts-label)");
+  const saveAllContacts = () => {
+    const rows = contactsTableBody.querySelectorAll("tr:not(.contacts-label)");
     const contacts = Array.from(rows).map(row => ({
       name: row.children[0].textContent,
       email: row.children[1].textContent,
       phone: row.children[2].textContent,
       job: row.children[3].textContent
     }));
-    localStorage.setItem(getUserKey(currentUser), JSON.stringify(contacts));
+    localStorage.setItem(getUserStorageKey(loggedInUserEmail), JSON.stringify(contacts));
   };
 
-  const loadContacts = () => {
-    const saved = JSON.parse(localStorage.getItem(getUserKey(currentUser))) || [];
-    tableBody.innerHTML = "";
-    saved.forEach(contact => createContactRow(contact));
-    addDeleteListeners();
-    addEditListeners();
-    updateCount();
+  const loadAllContacts = () => {
+    const savedContacts = JSON.parse(localStorage.getItem(getUserStorageKey(loggedInUserEmail))) || [];
+    contactsTableBody.innerHTML = "";
+    savedContacts.forEach(contact => addContactToTable(contact));
+    enableDeleteButtons();
+    enableEditButtons();
+    updateContactCount();
   };
 
-  const updateCount = () => {
-    const contactRows = tableBody.querySelectorAll("tr:not(.contacts-label)");
-    countElement.forEach(count => {
-      count.textContent = `(${contactRows.length})`;
+  const updateContactCount = () => {
+    const visibleRows = contactsTableBody.querySelectorAll("tr:not(.contacts-label)");
+    contactCountDisplays.forEach(display => {
+      display.textContent = `(${visibleRows.length})`;
     });
   };
 
-  const createContactRow = (contact) => {
+  const addContactToTable = (contact) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${contact.name}</td>
@@ -62,56 +62,57 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="delete-btn">Delete</button>
       </td>
     `;
-    tableBody.appendChild(row);
+    contactsTableBody.appendChild(row);
   };
 
-  const addDeleteListeners = () => {
-    tableBody.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = () => {
+  const enableDeleteButtons = () => {
+    contactsTableBody.querySelectorAll(".delete-btn").forEach(button => {
+      button.onclick = () => {
         if (confirm("Are you sure you want to delete this contact?")) {
-          btn.closest("tr").remove();
-          saveContacts();
-          updateCount();
+          button.closest("tr").remove();
+          saveAllContacts();
+          updateContactCount();
         }
       };
     });
   };
 
-  const addEditListeners = () => {
-    tableBody.querySelectorAll(".edit-btn").forEach(btn => {
-      btn.onclick = () => {
-        const row = btn.closest("tr");
-        const contact = {
+  const enableEditButtons = () => {
+    contactsTableBody.querySelectorAll(".edit-btn").forEach(button => {
+      button.onclick = () => {
+        const row = button.closest("tr");
+        const contactInfo = {
           name: row.children[0].textContent,
           email: row.children[1].textContent,
           phone: row.children[2].textContent,
           job: row.children[3].textContent,
         };
-        showForm(contact, row);
+        openContactForm(contactInfo, row);
       };
     });
   };
 
-  const showForm = (existing = null, rowToUpdate = null) => {
-    const modal = document.createElement("div");
-    modal.classList.add("modal-overlay");
-    modal.innerHTML = `
+  const openContactForm = (existingContact = null, rowToUpdate = null) => {
+    const overlay = document.createElement("div");
+    overlay.classList.add("modal-overlay");
+
+    overlay.innerHTML = `
       <div class="modal">
-        <h3>${existing ? "Edit" : "Create"} Contact</h3>
-        <label>Name:<br><input type="text" id="contact-name" value="${existing?.name || ''}" /></label><br><br>
-        <label>Phone:<br><input type="text" id="contact-phone" value="${existing?.phone || ''}" /></label><br><br>
-        <label>Email (optional):<br><input type="text" id="contact-email" value="${existing?.email || ''}" /></label><br><br>
-        <label>Job Title & Company (optional):<br><input type="text" id="contact-job" value="${existing?.job || ''}" /></label><br><br>
-        <button id="save-contact">${existing ? "Update" : "Save"}</button>
+        <h3>${existingContact ? "Edit" : "Create"} Contact</h3>
+        <label>Name:<br><input type="text" id="contact-name" value="${existingContact?.name || ''}" /></label><br><br>
+        <label>Phone:<br><input type="text" id="contact-phone" value="${existingContact?.phone || ''}" /></label><br><br>
+        <label>Email (optional):<br><input type="text" id="contact-email" value="${existingContact?.email || ''}" /></label><br><br>
+        <label>Job Title & Company (optional):<br><input type="text" id="contact-job" value="${existingContact?.job || ''}" /></label><br><br>
+        <button id="save-contact">${existingContact ? "Update" : "Save"}</button>
         <button id="cancel-contact">Cancel</button>
       </div>
     `;
 
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) modal.remove();
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) overlay.remove();
     });
 
-    document.body.appendChild(modal);
+    document.body.appendChild(overlay);
 
     document.getElementById("save-contact").onclick = () => {
       const name = document.getElementById("contact-name").value.trim();
@@ -141,22 +142,26 @@ document.addEventListener("DOMContentLoaded", () => {
           </td>
         `;
       } else {
-        createContactRow({ name, phone, email, job });
+        addContactToTable({ name, phone, email, job });
       }
 
-      modal.remove();
-      addDeleteListeners();
-      addEditListeners();
-      saveContacts();
-      updateCount();
+      overlay.remove();
+      enableDeleteButtons();
+      enableEditButtons();
+      saveAllContacts();
+      updateContactCount();
     };
 
-    document.getElementById("cancel-contact").onclick = () => modal.remove();
+    document.getElementById("cancel-contact").onclick = () => overlay.remove();
   };
 
-  createBtn.onclick = () => showForm();
+  createContactButton.onclick = () => openContactForm();
 
-  signupForm.addEventListener("submit", (e) => {
+  function validatePasswordLength(password) {
+    return password.length >= 4 && password.length <= 16;
+  }
+
+  signupFormElement.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const email = document.getElementById("signup-email").value.trim();
@@ -168,81 +173,93 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (!validatePasswordLength(password)) {
+      alert("Password must be between 4 and 16 characters."); 
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-    const existingUser = users.find(user => user.email === email);
+    let allUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const userAlreadyExists = allUsers.find(user => user.email === email);
 
-    if (existingUser) {
+    if (userAlreadyExists) {
       alert("User already exists. Please log in.");
       return;
     }
 
-    users.push({ email, password });
-    localStorage.setItem("users", JSON.stringify(users));
+    allUsers.push({ email, password });
+    localStorage.setItem("users", JSON.stringify(allUsers));
 
     alert("Signup successful. Please log in.");
     switchForm("login");
   });
 
-  loginForm.addEventListener("submit", (e) => {
+
+  loginFormElement.addEventListener("submit", (e) => {
     e.preventDefault();
 
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value.trim();
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find(u => u.email === email && u.password === password);
+    const allUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const matchedUser = allUsers.find(user => user.email === email && user.password === password);
 
-    if (!user) {
+    if (!matchedUser) {
       alert("Invalid email or password.");
       return;
     }
 
-    currentUser = user.email;
-    localStorage.setItem("currentUser", currentUser);
+    loggedInUserEmail = matchedUser.email;
+    localStorage.setItem("currentUser", loggedInUserEmail);
 
-    accessContainer.style.display = "none";
-    mainContainer.style.display = "flex";
-    loadContacts();
+    loginSignupSection.style.display = "none";
+    mainContactsSection.style.display = "flex";
+    loadAllContacts();
   });
 
-  logoutBtn.onclick = () => {
+  logoutButton.onclick = () => {
     localStorage.removeItem("currentUser");
-    currentUser = null;
-    mainContainer.style.display = "none";
-    accessContainer.style.display = "flex";
+    loggedInUserEmail = null;
+    mainContactsSection.style.display = "none";
+    loginSignupSection.style.display = "flex";
   };
 
-  searchInput.addEventListener("input", (e) => {
-    const query = e.target.value.toLowerCase();
-    tableBody.querySelectorAll("tr:not(.favorites-label):not(.contacts-label)").forEach(row => {
-      const fields = Array.from(row.children).slice(0, 4);
-      const match = fields.some(cell => cell.textContent.toLowerCase().includes(query));
-      row.style.display = match ? "" : "none";
 
-      if (match && query) {
-        fields.forEach(cell => {
-          const text = cell.textContent;
-          const regex = new RegExp(`(${query})`, "gi");
-          cell.innerHTML = text.replace(regex, `<mark>$1</mark>`);
+  searchInputField.addEventListener("input", (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    contactsTableBody.querySelectorAll("tr:not(.contacts-label)").forEach(row => {
+      const cells = Array.from(row.children).slice(0, 4);
+      const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchValue));
+      row.style.display = matches ? "" : "none";
+
+      if (matches && searchValue) {
+        cells.forEach(cell => {
+          const originalText = cell.textContent;
+          const regex = new RegExp(`(${searchValue})`, "gi");
+          cell.innerHTML = originalText.replace(regex, `<mark>$1</mark>`);
         });
       } else {
-        fields.forEach(cell => {
-          cell.innerHTML = cell.textContent; 
+        cells.forEach(cell => {
+          cell.innerHTML = cell.textContent;
         });
       }
     });
   });
 
-  const storedUser = localStorage.getItem("currentUser");
-  if (storedUser) {
-    currentUser = storedUser;
-    accessContainer.style.display = "none";
-    mainContainer.style.display = "flex";
-    loadContacts();
+  const savedLoggedInUser = localStorage.getItem("currentUser");
+  if (savedLoggedInUser) {
+    loggedInUserEmail = savedLoggedInUser;
+    loginSignupSection.style.display = "none";
+    mainContactsSection.style.display = "flex";
+    loadAllContacts();
   }
 });
