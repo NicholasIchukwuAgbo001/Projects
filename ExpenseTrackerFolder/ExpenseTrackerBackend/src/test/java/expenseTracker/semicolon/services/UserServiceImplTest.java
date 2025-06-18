@@ -85,14 +85,12 @@ class UserServiceImplTest {
 
     @Test
     void testLoginWithInvalidPasswordThrows() {
-        // Register first
         RegisterRequest register = new RegisterRequest();
         register.setName("Nicholas");
         register.setEmail("niko@gmail.com");
         register.setPassword("1122");
         userService.registerUser(register);
 
-        // Attempt login with wrong password
         LoginRequest login = new LoginRequest();
         login.setEmail("niko@gmail.com");
         login.setPassword("wrong");
