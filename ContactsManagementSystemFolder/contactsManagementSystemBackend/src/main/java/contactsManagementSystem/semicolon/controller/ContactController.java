@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/contacts")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class ContactController {
 
     private final ContactServiceImpl contactService;
@@ -26,4 +25,10 @@ public class ContactController {
     public List<Contact> getUserContacts(@PathVariable String userId) {
         return contactService.getUserContacts(userId);
     }
+
+    @DeleteMapping("/{contactId}")
+    public ApiResponse deleteContact(@PathVariable String contactId) {
+        return contactService.deleteContactById(contactId);
+    }
 }
+
