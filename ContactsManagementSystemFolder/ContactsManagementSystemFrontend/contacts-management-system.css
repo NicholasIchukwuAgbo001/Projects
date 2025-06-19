@@ -344,23 +344,23 @@ body {
   padding: 0.5rem 1rem;
 }
 
-#login-message-container,
-#signup-message-container,
-#main-message-container,
-#modal-message-container {
-  position: relative; 
-  z-index: 1;
+.message-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
 }
 
-
 .message {
-  padding: 10px 16px;
+  padding: 6px 12px;
   border-radius: 4px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  animation: fadeOut 5s ease forwards;
-  margin-bottom: 8px;
-  line-height: 1.4;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  animation: fadeOut 5s forwards;
 }
 
 .message.success {
@@ -378,11 +378,9 @@ body {
 @keyframes fadeOut {
   0% {
     opacity: 1;
-    transform: translateY(0);
   }
   80% {
     opacity: 1;
-    transform: translateY(0);
   }
   100% {
     opacity: 0;
