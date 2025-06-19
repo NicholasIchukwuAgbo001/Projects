@@ -14,6 +14,18 @@ const searchInput = document.getElementById("search");
 let transactions = [];
 let currentUser = localStorage.getItem("currentUser");
 
+function showMessage(message, type = "success") {
+  const container = document.getElementById("message-container");
+  const msgEl = document.createElement("div");
+  msgEl.classList.add("message", type);
+  msgEl.textContent = message;
+  container.appendChild(msgEl);
+
+  setTimeout(() => {
+    msgEl.remove();
+  }, 5000); 
+}
+
 function showAccessContainer() {
   document.getElementById("access-container").style.display = "flex";
   document.querySelector(".container").style.display = "none";
@@ -109,7 +121,7 @@ async function login() {
   const password = loginForm["login-password"].value.trim();
 
   if (!email || !password) {
-    alert("Please enter both email and password.");
+    showMessage("Please enter both email and password.", "error");
     return;
   }
 
@@ -123,18 +135,19 @@ async function login() {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      alert(`Welcome ${data.name}`);
+      showMessage(`Welcome ${data.name}`, "success");
       saveCurrentUser(email, data.name);
       showAppContainer(data.name);
       await loadTransactions();
       loginForm.reset();
     } else {
-      alert(data.message || "Invalid email or password");
+      showMessage(data.message || "Invalid email or password", "error");
     }
   } catch (err) {
-    alert("Login failed: " + err.message);
+    showMessage("Login failed: " + err.message, "error");
   }
 }
+
 
 async function signup() {
   const email = signupForm["signup-email"].value.trim();
@@ -143,22 +156,22 @@ async function signup() {
   const age = parseInt(signupForm["age"].value.trim(), 10);
 
   if (!email || !password || !name || isNaN(age)) {
-    alert("Please fill in all fields correctly.");
+    showMessage("Please fill in all fields correctly.", "error");
     return;
   }
 
   if (!validateEmail(email)) {
-    alert("Please enter a valid Gmail address.");
+    showMessage("Please enter a valid Gmail address.", "error");
     return;
   }
 
   if (!validatePasswordLength(password)) {
-    alert("Password must be between 4 and 16 characters long.");
+    showMessage("Password must be between 4 and 16 characters long.", "error");
     return;
   }
 
   if (age <= 0) {
-    alert("Please enter a valid age.");
+    showMessage("Please enter a valid age.", "error");
     return;
   }
 
@@ -172,16 +185,17 @@ async function signup() {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      alert("Signup successful! You can now log in.");
+      showMessage("Signup successful! You can now log in.", "success");
       switchForm("login");
       signupForm.reset();
     } else {
-      alert(data.message || "Signup failed");
+      showMessage(data.message || "Signup failed", "error");
     }
   } catch (err) {
-    alert("Error signing up: " + err.message);
+    showMessage("Error signing up: " + err.message, "error");
   }
 }
+
 
 async function loadTransactions() {
   if (!currentUser) {
@@ -200,13 +214,13 @@ async function loadTransactions() {
       updateTransactionList();
       updateSummary();
     } else {
-      alert(data.message || "Failed to load transactions");
+      showMessage(data.message || "Failed to load transactions", "error");
       transactions = [];
       updateTransactionList();
       updateSummary();
     }
   } catch (err) {
-    alert("Error loading transactions: " + err.message);
+    showMessage("Error loading transactions: " + err.message, "error");
     transactions = [];
     updateTransactionList();
     updateSummary();
@@ -216,7 +230,7 @@ async function loadTransactions() {
 async function addTransaction(e) {
   e.preventDefault();
   if (!currentUser) {
-    alert("Please log in to add transactions.");
+    showMessage("Please log in to add transactions.", "error");
     return;
   }
 
@@ -224,7 +238,7 @@ async function addTransaction(e) {
   const amount = parseFloat(amountEl.value);
 
   if (!description || isNaN(amount) || amount === 0) {
-    alert("Please enter a valid description and amount.");
+    showMessage("Please enter a valid description and amount.", "error");
     return;
   }
 
@@ -238,16 +252,17 @@ async function addTransaction(e) {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      alert("Transaction added successfully");
+      showMessage("Transaction added successfully", "success");
       await loadTransactions();
       transactionFormEl.reset();
     } else {
-      alert(data.message || "Failed to add transaction");
+      showMessage(data.message || "Failed to add transaction", "error");
     }
   } catch (err) {
-    alert("Error adding transaction: " + err.message);
+    showMessage("Error adding transaction: " + err.message, "error");
   }
 }
+
 
 async function removeTransaction(id) {
   try {
@@ -255,15 +270,16 @@ async function removeTransaction(id) {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      alert("Transaction removed");
+      showMessage("Transaction removed", "success");
       await loadTransactions();
     } else {
-      alert(data.message || "Failed to remove transaction");
+      showMessage(data.message || "Failed to remove transaction", "error");
     }
   } catch (err) {
-    alert("Error removing transaction: " + err.message);
+    showMessage("Error removing transaction: " + err.message, "error");
   }
 }
+
 
 function switchForm(name) {
   if (name === "login") {
