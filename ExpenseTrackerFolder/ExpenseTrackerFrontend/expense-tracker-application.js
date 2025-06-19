@@ -14,16 +14,23 @@ const searchInput = document.getElementById("search");
 let transactions = [];
 let currentUser = localStorage.getItem("currentUser");
 
-function showMessage(message, type = "success") {
-  const container = document.getElementById("message-container");
-  const msgEl = document.createElement("div");
-  msgEl.classList.add("message", type);
-  msgEl.textContent = message;
-  container.appendChild(msgEl);
+function showMessage(message, type = "success", context = "main") {
+  const containers = {
+    login: document.getElementById("login-message-container"),
+    signup: document.getElementById("signup-message-container"),
+    main: document.getElementById("main-message-container")
+  };
 
-  setTimeout(() => {
-    msgEl.remove();
-  }, 5000); 
+  const container = containers[context];
+  if (!container) return;
+
+  const msg = document.createElement("div");
+  msg.className = `message ${type}`;
+  msg.textContent = message;
+  container.innerHTML = "";
+  container.appendChild(msg);
+
+  setTimeout(() => msg.remove(), 5000);
 }
 
 function showAccessContainer() {
@@ -62,7 +69,7 @@ function clearCurrentUser() {
 }
 
 function validateEmail(email) {
-  return !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email);
+  return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email);
 }
 
 function validatePasswordLength(password) {
@@ -72,18 +79,15 @@ function validatePasswordLength(password) {
 function createTransactionElement(transaction) {
   const li = document.createElement("li");
   li.classList.add("transaction", transaction.amount > 0 ? "income" : "expense");
-
   li.style.width = "83%";
 
   const descSpan = document.createElement("span");
   descSpan.textContent = transaction.description;
-
   descSpan.style.fontWeight = "600";
   descSpan.style.color = transaction.amount > 0 ? "#4caf50" : "#f44336";
 
   const amountSpan = document.createElement("span");
   amountSpan.textContent = formatCurrency(transaction.amount);
-
   amountSpan.style.fontWeight = "600";
   amountSpan.style.color = transaction.amount > 0 ? "#4caf50" : "#f44336";
 
@@ -121,7 +125,7 @@ async function login() {
   const password = loginForm["login-password"].value.trim();
 
   if (!email || !password) {
-    showMessage("Please enter both email and password.", "error");
+    showMessage("Please enter both email and password.", "error", "login");
     return;
   }
 
@@ -135,19 +139,18 @@ async function login() {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      showMessage(`Welcome ${data.name}`, "success");
+      showMessage(`Welcome ${data.name}`, "success", "login");
       saveCurrentUser(email, data.name);
       showAppContainer(data.name);
       await loadTransactions();
       loginForm.reset();
     } else {
-      showMessage(data.message || "Invalid email or password", "error");
+      showMessage(data.message || "Invalid email or password", "error", "login");
     }
   } catch (err) {
-    showMessage("Login failed: " + err.message, "error");
+    showMessage("Login failed: " + err.message, "error", "login");
   }
 }
-
 
 async function signup() {
   const email = signupForm["signup-email"].value.trim();
@@ -156,22 +159,22 @@ async function signup() {
   const age = parseInt(signupForm["age"].value.trim(), 10);
 
   if (!email || !password || !name || isNaN(age)) {
-    showMessage("Please fill in all fields correctly.", "error");
+    showMessage("Please fill in all fields correctly.", "error", "signup");
     return;
   }
 
   if (!validateEmail(email)) {
-    showMessage("Please enter a valid Gmail address.", "error");
+    showMessage("Please enter a valid email address.", "error", "signup");
     return;
   }
 
   if (!validatePasswordLength(password)) {
-    showMessage("Password must be between 4 and 16 characters long.", "error");
+    showMessage("Password must be between 4 and 16 characters long.", "error", "signup");
     return;
   }
 
   if (age <= 0) {
-    showMessage("Please enter a valid age.", "error");
+    showMessage("Please enter a valid age.", "error", "signup");
     return;
   }
 
@@ -185,17 +188,16 @@ async function signup() {
     const data = await res.json();
 
     if (res.ok && data.success) {
-      showMessage("Signup successful! You can now log in.", "success");
+      showMessage("Signup successful! You can now log in.", "success", "signup");
       switchForm("login");
       signupForm.reset();
     } else {
-      showMessage(data.message || "Signup failed", "error");
+      showMessage(data.message || "Signup failed", "error", "signup");
     }
   } catch (err) {
-    showMessage("Error signing up: " + err.message, "error");
+    showMessage("Error signing up: " + err.message, "error", "signup");
   }
 }
-
 
 async function loadTransactions() {
   if (!currentUser) {
@@ -263,7 +265,6 @@ async function addTransaction(e) {
   }
 }
 
-
 async function removeTransaction(id) {
   try {
     const res = await fetch(`${BACKEND_URL}/api/transactions/${id}`, { method: "DELETE" });
@@ -279,7 +280,6 @@ async function removeTransaction(id) {
     showMessage("Error removing transaction: " + err.message, "error");
   }
 }
-
 
 function switchForm(name) {
   if (name === "login") {
@@ -308,13 +308,13 @@ logoutBtn.addEventListener("click", () => {
   updateSummary();
 });
 
-loginForm.addEventListener("submit", element => {
-  element.preventDefault();
+loginForm.addEventListener("submit", e => {
+  e.preventDefault();
   login();
 });
 
-signupForm.addEventListener("submit", element => {
-  element.preventDefault();
+signupForm.addEventListener("submit", e => {
+  e.preventDefault();
   signup();
 });
 
