@@ -21,22 +21,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-function showMessage(message, type = "success", context = "main") {
-  const containers = {
-    login: document.getElementById("login-message-container"),
-    signup: document.getElementById("signup-message-container"),
-    main: document.getElementById("main-message-container")
-  };
+  function showMessage(message, type = "success", context = "main") {
+    const containers = {
+      login: document.getElementById("login-message-container"),
+      signup: document.getElementById("signup-message-container"),
+      main: document.getElementById("main-message-container"),
+      modal: document.getElementById("modal-message-container")
+    };
 
-  const container = containers[context];
-  if (!container) return;
+    const container = containers[context];
+    if (!container) return;
 
-  const msg = document.createElement("div");
-  msg.className = `message ${type}`;
-  msg.textContent = message;
-  container.appendChild(msg);
-  setTimeout(() => msg.remove(), 5000);
-}
+    const msg = document.createElement("div");
+    msg.className = `message ${type}`;
+    msg.textContent = message;
+    container.appendChild(msg);
+    setTimeout(() => msg.remove(), 5000);
+  }
 
   const getUserStorageKey = (email) => `contacts_${email}`;
 
@@ -106,6 +107,7 @@ function showMessage(message, type = "success", context = "main") {
         <label>Job Title & Company (optional):<br><input type="text" id="contact-job" /></label><br><br>
         <button id="save-contact">Save</button>
         <button id="cancel-contact">Cancel</button>
+        <div id="modal-message-container"></div>
       </div>
     `;
 
@@ -122,12 +124,12 @@ function showMessage(message, type = "success", context = "main") {
       const job = document.getElementById("contact-job").value.trim();
 
       if (!name || !phone) {
-        showMessage("Name and phone number are required.", "error");
+        showMessage("Name and phone number are required.", "error", "modal");
         return;
       }
 
       if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-        showMessage("Please enter a valid email address.", "error");
+        showMessage("Please enter a valid email address.", "modal");
         return;
       }
 
@@ -157,22 +159,22 @@ function showMessage(message, type = "success", context = "main") {
     const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
 
     if (!email || !password || !confirmPassword) {
-      showMessage("All fields are required.", "error");
+      showMessage("All fields are required.", "error", "signup");
       return;
     }
 
     if (!validatePasswordLength(password)) {
-      showMessage("Password must be between 4 and 16 characters.", "error");
+      showMessage("Password must be between 4 and 16 characters.", "error", "signup");
       return;
     }
 
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      showMessage("Please enter a valid email address.", "error");
+      showMessage("Please enter a valid email address.", "error", "signup");
       return;
     }
 
     if (password !== confirmPassword) {
-      showMessage("Passwords do not match.", "error");
+      showMessage("Passwords do not match.", "error", "signup");
       return;
     }
 
@@ -180,14 +182,14 @@ function showMessage(message, type = "success", context = "main") {
     const userAlreadyExists = allUsers.find(user => user.email === email);
 
     if (userAlreadyExists) {
-      showMessage("User already exists. Please log in.", "error");
+      showMessage("User already exists. Please log in.", "error", "signup");
       return;
     }
 
     allUsers.push({ email, password });
     localStorage.setItem("users", JSON.stringify(allUsers));
 
-    showMessage("Signup successful. Please log in.", "success");
+    showMessage("Signup successful. Please log in.", "success", "signup");
     switchForm("login");
   });
 
@@ -201,7 +203,7 @@ function showMessage(message, type = "success", context = "main") {
     const matchedUser = allUsers.find(user => user.email === email && user.password === password);
 
     if (!matchedUser) {
-      showMessage("Invalid email or password.", "error");
+      showMessage("Invalid email or password.", "error", "login");
       return;
     }
 
