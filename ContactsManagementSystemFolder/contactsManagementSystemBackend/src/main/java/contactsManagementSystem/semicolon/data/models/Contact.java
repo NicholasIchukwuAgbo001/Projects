@@ -4,8 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
 @Document
+@Data
 public class Contact {
     @Id
     private String id;
@@ -15,3 +15,4 @@ public class Contact {
     private String jobTitle;
     private String userId;
 }
+

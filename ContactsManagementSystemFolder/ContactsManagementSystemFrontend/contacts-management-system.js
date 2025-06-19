@@ -1,255 +1,230 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const createContactButton = document.querySelector(".create-contact-btn");
-  const contactsTableBody = document.querySelector(".contacts-table tbody");
-  const contactCountDisplays = document.querySelectorAll(".count");
-  const searchInputField = document.querySelector(".search-bar");
-  const loginFormElement = document.getElementById("login-form");
-  const signupFormElement = document.getElementById("signup-form");
-  const loginSignupSection = document.getElementById("access-container");
-  const mainContactsSection = document.querySelector(".main");
-  const logoutButton = document.querySelector(".logout-btn");
+const BASE_URL = "http://localhost:4466/api";
 
-  let loggedInUserEmail = null;
+const createContactButton = document.querySelector(".create-contact-btn");
+const contactsTableBody = document.querySelector(".contacts-table tbody");
+const contactCountDisplays = document.querySelectorAll(".count");
+const searchInputField = document.querySelector(".search-bar");
+const loginFormElement = document.getElementById("login-form");
+const signupFormElement = document.getElementById("signup-form");
+const loginSignupSection = document.getElementById("access-container");
+const mainContactsSection = document.querySelector(".main");
+const logoutButton = document.querySelector(".logout-btn");
 
-  window.switchForm = function (formType) {
-    if (formType === "signup") {
-      loginFormElement.classList.remove("active");
-      signupFormElement.classList.add("active");
-    } else {
-      signupFormElement.classList.remove("active");
-      loginFormElement.classList.add("active");
-    }
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/;
+const phoneRegex = /^[0-9]{7,15}$/;
+
+let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+window.switchForm = function (formType) {
+  loginFormElement.classList.toggle("active", formType === "login");
+  signupFormElement.classList.toggle("active", formType === "signup");
+};
+
+function showMessage(message, type = "success", context = "main") {
+  const containers = {
+    login: document.getElementById("login-message-container"),
+    signup: document.getElementById("signup-message-container"),
+    main: document.getElementById("main-message-container"),
+    modal: document.getElementById("modal-message-container"),
   };
+  const container = containers[context];
+  if (!container) return;
 
-  function showMessage(message, type = "success", context = "main") {
-    const containers = {
-      login: document.getElementById("login-message-container"),
-      signup: document.getElementById("signup-message-container"),
-      main: document.getElementById("main-message-container"),
-      modal: document.getElementById("modal-message-container")
-    };
+  const msg = document.createElement("div");
+  msg.className = `message ${type}`;
+  msg.textContent = message;
+  container.appendChild(msg);
+  setTimeout(() => msg.remove(), 5000);
+}
 
-    const container = containers[context];
-    if (!container) return;
+function updateContactCount() {
+  const visibleRows = contactsTableBody.querySelectorAll("tr:not(.contacts-label)");
+  contactCountDisplays.forEach(display => {
+    display.textContent = `(${visibleRows.length})`;
+  });
+}
 
-    const msg = document.createElement("div");
-    msg.className = `message ${type}`;
-    msg.textContent = message;
-    container.appendChild(msg);
-    setTimeout(() => msg.remove(), 5000);
-  }
+function addContactToTable(contact) {
+  const row = document.createElement("tr");
+  row.dataset.id = contact.id;
+  row.innerHTML = `
+    <td>${contact.name}</td>
+    <td>${contact.email || ""}</td>
+    <td>${contact.phoneNumber}</td>
+    <td>${contact.jobTitle || ""}</td>
+    <td><button class="delete-btn">Delete</button></td>
+  `;
+  contactsTableBody.appendChild(row);
+}
 
-  const getUserStorageKey = (email) => `contacts_${email}`;
-
-  const saveAllContacts = () => {
-    const rows = contactsTableBody.querySelectorAll("tr:not(.contacts-label)");
-    const contacts = Array.from(rows).map(row => ({
-      name: row.children[0].textContent,
-      email: row.children[1].textContent,
-      phone: row.children[2].textContent,
-      job: row.children[3].textContent
-    }));
-    localStorage.setItem(getUserStorageKey(loggedInUserEmail), JSON.stringify(contacts));
-  };
-
-  const loadAllContacts = () => {
-    const savedContacts = JSON.parse(localStorage.getItem(getUserStorageKey(loggedInUserEmail))) || [];
-    contactsTableBody.innerHTML = "";
-    savedContacts.forEach(contact => addContactToTable(contact));
-    enableDeleteButtons();
-    updateContactCount();
-  };
-
-  const updateContactCount = () => {
-    const visibleRows = contactsTableBody.querySelectorAll("tr:not(.contacts-label)");
-    contactCountDisplays.forEach(display => {
-      display.textContent = `(${visibleRows.length})`;
-    });
-  };
-
-  const addContactToTable = (contact) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${contact.name}</td>
-      <td>${contact.email}</td>
-      <td>${contact.phone}</td>
-      <td>${contact.job}</td>
-      <td>
-        <button class="delete-btn">Delete</button>
-      </td>
-    `;
-    contactsTableBody.appendChild(row);
-  };
-
-  const enableDeleteButtons = () => {
-    contactsTableBody.querySelectorAll(".delete-btn").forEach(button => {
-      button.onclick = () => {
-        if (confirm("Are you sure you want to delete this contact?")) {
-          button.closest("tr").remove();
-          saveAllContacts();
+function enableDeleteButtons() {
+  contactsTableBody.querySelectorAll(".delete-btn").forEach(button => {
+    button.onclick = async () => {
+      const row = button.closest("tr");
+      const contactId = row.dataset.id;
+      if (!contactId) return;
+      if (!confirm("Are you sure you want to delete this contact?")) return;
+      try {
+        const res = await fetch(`${BASE_URL}/contacts/${contactId}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+          row.remove();
           updateContactCount();
           showMessage("Contact deleted", "success");
+        } else {
+          showMessage(data.message, "error");
         }
-      };
-    });
-  };
-
-  const openContactForm = () => {
-    const overlay = document.createElement("div");
-    overlay.classList.add("modal-overlay");
-
-    overlay.innerHTML = `
-      <div class="modal">
-        <h3>Create Contact</h3>
-        <label>Name:<br><input type="text" id="contact-name" /></label><br><br>
-        <label>Phone:<br><input type="text" id="contact-phone" /></label><br><br>
-        <label>Email (optional):<br><input type="text" id="contact-email" /></label><br><br>
-        <label>Job Title & Company (optional):<br><input type="text" id="contact-job" /></label><br><br>
-        <button id="save-contact">Save</button>
-        <button id="cancel-contact">Cancel</button>
-        <div id="modal-message-container"></div>
-      </div>
-    `;
-
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) overlay.remove();
-    });
-
-    document.body.appendChild(overlay);
-
-    document.getElementById("save-contact").onclick = () => {
-      const name = document.getElementById("contact-name").value.trim();
-      const phone = document.getElementById("contact-phone").value.trim();
-      const email = document.getElementById("contact-email").value.trim();
-      const job = document.getElementById("contact-job").value.trim();
-
-      if (!name || !phone) {
-        showMessage("Name and phone number are required.", "error", "modal");
-        return;
+      } catch {
+        showMessage("Failed to delete contact.", "error");
       }
-
-      if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-        showMessage("Please enter a valid email address.", "modal");
-        return;
-      }
-
-      addContactToTable({ name, phone, email, job });
-      showMessage("Contact added", "success");
-
-      overlay.remove();
-      enableDeleteButtons();
-      saveAllContacts();
-      updateContactCount();
     };
+  });
+}
 
-    document.getElementById("cancel-contact").onclick = () => overlay.remove();
-  };
-
-  createContactButton.onclick = () => openContactForm();
-
-  function validatePasswordLength(password) {
-    return password.length >= 4 && password.length <= 16;
+async function loadAllContacts() {
+  if (!currentUser || !currentUser.id) return;
+  try {
+    const res = await fetch(`${BASE_URL}/contacts/${currentUser.id}`);
+    const contacts = await res.json();
+    contactsTableBody.innerHTML = "";
+    contacts.forEach(addContactToTable);
+    enableDeleteButtons();
+    updateContactCount();
+  } catch {
+    showMessage("Failed to load contacts.", "error");
   }
+}
 
-  signupFormElement.addEventListener("submit", (e) => {
-    e.preventDefault();
+function openContactForm() {
+  const overlay = document.createElement("div");
+  overlay.classList.add("modal-overlay");
+  overlay.innerHTML = `
+    <div class="modal">
+      <h3>Create Contact</h3>
+      <label>Name:<br><input type="text" id="contact-name" /></label><br><br>
+      <label>Phone:<br><input type="text" id="contact-phone" /></label><br><br>
+      <label>Email (optional):<br><input type="text" id="contact-email" /></label><br><br>
+      <label>Job Title & Company (optional):<br><input type="text" id="contact-job" /></label><br><br>
+      <button id="save-contact">Save</button>
+      <button id="cancel-contact">Cancel</button>
+      <div id="modal-message-container"></div>
+    </div>
+  `;
+  overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
 
-    const email = document.getElementById("signup-email").value.trim();
-    const password = document.getElementById("signup-password").value.trim();
-    const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
-
-    if (!email || !password || !confirmPassword) {
-      showMessage("All fields are required.", "error", "signup");
-      return;
-    }
-
-    if (!validatePasswordLength(password)) {
-      showMessage("Password must be between 4 and 16 characters.", "error", "signup");
-      return;
-    }
-
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      showMessage("Please enter a valid email address.", "error", "signup");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      showMessage("Passwords do not match.", "error", "signup");
-      return;
-    }
-
-    let allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const userAlreadyExists = allUsers.find(user => user.email === email);
-
-    if (userAlreadyExists) {
-      showMessage("User already exists. Please log in.", "error", "signup");
-      return;
-    }
-
-    allUsers.push({ email, password });
-    localStorage.setItem("users", JSON.stringify(allUsers));
-
-    showMessage("Signup successful. Please log in.", "success", "signup");
-    switchForm("login");
-  });
-
-  loginFormElement.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value.trim();
-
-    const allUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const matchedUser = allUsers.find(user => user.email === email && user.password === password);
-
-    if (!matchedUser) {
-      showMessage("Invalid email or password.", "error", "login");
-      return;
-    }
-
-    loggedInUserEmail = matchedUser.email;
-    localStorage.setItem("currentUser", loggedInUserEmail);
-
-    loginSignupSection.style.display = "none";
-    mainContactsSection.style.display = "flex";
-    loadAllContacts();
-    showMessage("Login successful!", "success");
-  });
-
-  logoutButton.onclick = () => {
-    localStorage.removeItem("currentUser");
-    loggedInUserEmail = null;
-    mainContactsSection.style.display = "none";
-    loginSignupSection.style.display = "flex";
-    showMessage("Logged out successfully.", "success");
-  };
-
-  searchInputField.addEventListener("input", (e) => {
-    const searchValue = e.target.value.toLowerCase();
-    contactsTableBody.querySelectorAll("tr:not(.contacts-label)").forEach(row => {
-      const cells = Array.from(row.children).slice(0, 4);
-      const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchValue));
-      row.style.display = matches ? "" : "none";
-
-      if (matches && searchValue) {
-        cells.forEach(cell => {
-          const originalText = cell.textContent;
-          const regex = new RegExp(`(${searchValue})`, "gi");
-          cell.innerHTML = originalText.replace(regex, `<mark>$1</mark>`);
-        });
+  document.getElementById("save-contact").onclick = async () => {
+    const name = document.getElementById("contact-name").value.trim();
+    const phoneNumber = document.getElementById("contact-phone").value.trim();
+    const email = document.getElementById("contact-email").value.trim();
+    const jobTitle = document.getElementById("contact-job").value.trim();
+    if (!name) return showMessage("Name is required.", "error", "modal");
+    if (!phoneRegex.test(phoneNumber)) return showMessage("Phone must be 7-15 digits.", "error", "modal");
+    if (email && !emailRegex.test(email)) return showMessage("Invalid email format.", "error", "modal");
+    try {
+      const res = await fetch(`${BASE_URL}/contacts/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phoneNumber, email, jobTitle, userId: currentUser.id }),
+      });
+      const contact = await res.json();
+      if (contact.id) {
+        addContactToTable(contact);
+        overlay.remove();
+        enableDeleteButtons();
+        updateContactCount();
+        showMessage("Contact added", "success");
       } else {
-        cells.forEach(cell => {
-          cell.innerHTML = cell.textContent;
-        });
+        showMessage(contact.message || "Failed to save contact.", "error", "modal");
       }
+    } catch {
+      showMessage("Error saving contact", "error", "modal");
+    }
+  };
+  document.getElementById("cancel-contact").onclick = () => overlay.remove();
+}
+
+createContactButton.onclick = openContactForm;
+
+signupFormElement.onsubmit = async e => {
+  e.preventDefault();
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
+  const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
+  if (!emailRegex.test(email)) return showMessage("Invalid email.", "error", "signup");
+  if (password.length < 4 || password.length > 16) return showMessage("Password must be 4-16 chars.", "error", "signup");
+  if (password !== confirmPassword) return showMessage("Passwords do not match.", "error", "signup");
+  try {
+    const res = await fetch(`${BASE_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      showMessage("Signup successful. Please log in.", "success", "signup");
+      switchForm("login");
+    } else {
+      showMessage(data.message, "error", "signup");
+    }
+  } catch {
+    showMessage("Signup failed.", "error", "signup");
+  }
+};
+
+loginFormElement.onsubmit = async e => {
+  e.preventDefault();
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+  if (!emailRegex.test(email)) return showMessage("Invalid email.", "error", "login");
+  if (!password) return showMessage("Password required.", "error", "login");
+  try {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      currentUser = { id: data.userId, email: data.email };
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      loginSignupSection.style.display = "none";
+      mainContactsSection.style.display = "flex";
+      showMessage("Login successful!", "success");
+      loadAllContacts();
+    } else {
+      showMessage(data.message, "error", "login");
+    }
+  } catch {
+    showMessage("Login failed.", "error", "login");
+  }
+};
+
+logoutButton.onclick = () => {
+  localStorage.removeItem("currentUser");
+  currentUser = null;
+  loginSignupSection.style.display = "flex";
+  mainContactsSection.style.display = "none";
+  showMessage("Logged out successfully.", "success");
+};
+
+searchInputField.oninput = e => {
+  const searchValue = e.target.value.toLowerCase();
+  contactsTableBody.querySelectorAll("tr:not(.contacts-label)").forEach(row => {
+    const cells = Array.from(row.children).slice(0, 4);
+    const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchValue));
+    row.style.display = matches ? "" : "none";
+    cells.forEach(cell => {
+      const original = cell.textContent;
+      cell.innerHTML = searchValue
+        ? original.replace(new RegExp(`(${searchValue})`, "gi"), `<mark>$1</mark>`)
+        : original;
     });
   });
+};
 
-  const savedLoggedInUser = localStorage.getItem("currentUser");
-  if (savedLoggedInUser) {
-    loggedInUserEmail = savedLoggedInUser;
-    loginSignupSection.style.display = "none";
-    mainContactsSection.style.display = "flex";
-    loadAllContacts();
-  }
-});
+if (currentUser && currentUser.id) {
+  loginSignupSection.style.display = "none";
+  mainContactsSection.style.display = "flex";
+  loadAllContacts();
+}

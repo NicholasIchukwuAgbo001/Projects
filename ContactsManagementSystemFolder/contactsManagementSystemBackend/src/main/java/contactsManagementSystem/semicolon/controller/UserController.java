@@ -8,9 +8,10 @@ import contactsManagementSystem.semicolon.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class UserController {
 
     private final UserService userService;
