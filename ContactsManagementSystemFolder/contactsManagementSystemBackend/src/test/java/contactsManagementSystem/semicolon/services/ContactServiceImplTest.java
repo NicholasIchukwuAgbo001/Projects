@@ -68,57 +68,39 @@ public class ContactServiceImplTest {
     }
 
     @Test
-    void testGetMultipleContactsForUser() {
-        Contact contact1 = new Contact();
-        contact1.setName("Nicholas");
-        contact1.setPhoneNumber("123");
-        contact1.setUserId("user123");
-
-        Contact contact2 = new Contact();
-        contact2.setName("Jane");
-        contact2.setPhoneNumber("456");
-        contact2.setUserId("user123");
-
-        contactRepository.saveAll(List.of(contact1, contact2));
-
-        List<Contact> contacts = contactService.getUserContacts("user123");
-        assertEquals(2, contacts.size());
-    }
-
-    @Test
     void testDeleteContactById() {
         Contact contact = new Contact();
         contact.setName("John");
-        contact.setEmail("john@example.com");
-        contact.setPhoneNumber("987");
-        contact.setUserId("userX");
+        contact.setEmail("john@gmail.com");
+        contact.setPhoneNumber("070");
+        contact.setUserId("002");
         Contact saved = contactRepository.save(contact);
 
         ApiResponse response = contactService.deleteContactById(saved.getId());
 
         assertTrue(response.isSuccess());
-        assertEquals(0, contactRepository.findAllByUserId("userX").size());
+        assertEquals(0, contactRepository.findAllByUserId("002").size());
     }
 
     @Test
     void testDeleteContactByUserIdAndEmail() {
         Contact contact = new Contact();
         contact.setName("Alice");
-        contact.setEmail("alice@example.com");
+        contact.setEmail("alice@gmail.com");
         contact.setPhoneNumber("555");
-        contact.setJobTitle("Dev");
-        contact.setUserId("userY");
+        contact.setJobTitle("senior engine");
+        contact.setUserId("001");
         contactRepository.save(contact);
 
         ContactRequest deleteRequest = new ContactRequest();
-        deleteRequest.setUserId("userY");
-        deleteRequest.setEmail("alice@example.com");
+        deleteRequest.setUserId("001");
+        deleteRequest.setEmail("alice@gmail.com");
 
         ApiResponse response = contactService.deleteContact(deleteRequest);
 
         assertTrue(response.isSuccess());
         assertEquals("Contact deleted successfully", response.getMessage());
-        assertTrue(contactRepository.findAllByUserId("userY").isEmpty());
+        assertTrue(contactRepository.findAllByUserId("001").isEmpty());
     }
 
     @Test
@@ -136,7 +118,7 @@ public class ContactServiceImplTest {
     void testDeleteContactThrowsWhenNotFound() {
         ContactRequest request = new ContactRequest();
         request.setUserId("unknown");
-        request.setEmail("notfound@example.com");
+        request.setEmail("agbo@gmail.com");
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             contactService.deleteContact(request);

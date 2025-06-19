@@ -43,7 +43,8 @@ public class UserServiceImplTest {
 
         assertNotNull(response);
         assertEquals(testEmail, response.getEmail());
-        assertTrue(response.getMessage().contains("Signup successful"));       assertTrue(response.isSuccess());
+        assertTrue(response.getMessage().contains("Signup successful"));
+        assertTrue(response.isSuccess());
     }
 
     @Test
