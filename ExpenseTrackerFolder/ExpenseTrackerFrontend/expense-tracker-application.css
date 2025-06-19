@@ -70,7 +70,7 @@ body {
 
 .user-icon{
   position: absolute;
-  top: 38.6%;
+  top: 36.3%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -79,7 +79,7 @@ body {
 
 .user-icon-login{
   position: absolute;
-  top: 57%;
+  top: 55.5%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -88,7 +88,7 @@ body {
 
 .password-icon-login{
   position: absolute;
-  top: 68%;
+  top: 66%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -97,7 +97,7 @@ body {
 
 .email-icon{
   position: absolute;
-  top: 49%;
+  top: 46%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -106,7 +106,7 @@ body {
 
 .password-icon{
   position: absolute;
-  top: 57.5%;
+  top: 56%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -115,7 +115,7 @@ body {
 
 .age-icon{
   position: absolute;
-  top: 68%;
+  top: 66%;
   left: 15%;
   transform: translateY(-50%);
   color: #059669;
@@ -360,6 +360,7 @@ h2 {
   transition: all 0.2s ease;
   background-color: #000;
   color: #FAFAFA;
+  margin-bottom: 15px;
 }
 
 #transaction-list {
@@ -624,14 +625,25 @@ input:hover {
 }
 
 .message-container {
+  position: relative; 
+  height: 20px; 
   z-index: 1234565;
 }
 
 .message {
-  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0 20px;
+  z-index: 999;
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
   animation: fadeOut 5s forwards;
+  white-space: nowrap;
 }
 
 .message.success {
@@ -645,7 +657,7 @@ input:hover {
 @keyframes fadeOut {
   0% { opacity: 1; }
   90% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 0; }
 }
 
 @keyframes slideIn {
