@@ -21,6 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  function showMessage(message, type = "success") {
+    const container = document.getElementById("message-container");
+    const msg = document.createElement("div");
+    msg.className = `message ${type}`;
+    msg.textContent = message;
+    container.appendChild(msg);
+    setTimeout(() => msg.remove(), 5000);
+  }
+
   const getUserStorageKey = (email) => `contacts_${email}`;
 
   const saveAllContacts = () => {
@@ -72,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
           button.closest("tr").remove();
           saveAllContacts();
           updateContactCount();
+          showMessage("Contact deleted", "success");
         }
       };
     });
@@ -121,12 +131,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const job = document.getElementById("contact-job").value.trim();
 
       if (!name || !phone) {
-        alert("Name and phone number are required.");
+        showMessage("Name and phone number are required.", "error");
         return;
       }
 
       if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-        alert("Please enter a valid email address.");
+        showMessage("Please enter a valid email address.", "error");
         return;
       }
 
@@ -141,8 +151,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <button class="delete-btn">Delete</button>
           </td>
         `;
+        showMessage("Contact updated", "success");
       } else {
         addContactToTable({ name, phone, email, job });
+        showMessage("Contact added", "success");
       }
 
       overlay.remove();
@@ -169,22 +181,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
 
     if (!email || !password || !confirmPassword) {
-      alert("All fields are required.");
+      showMessage("All fields are required.", "error");
       return;
     }
 
     if (!validatePasswordLength(password)) {
-      alert("Password must be between 4 and 16 characters."); 
+      showMessage("Password must be between 4 and 16 characters.", "error");
       return;
     }
-    
+
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,}$/.test(email)) {
-      alert("Please enter a valid email address.");
+      showMessage("Please enter a valid email address.", "error");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      showMessage("Passwords do not match.", "error");
       return;
     }
 
@@ -192,17 +204,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const userAlreadyExists = allUsers.find(user => user.email === email);
 
     if (userAlreadyExists) {
-      alert("User already exists. Please log in.");
+      showMessage("User already exists. Please log in.", "error");
       return;
     }
 
     allUsers.push({ email, password });
     localStorage.setItem("users", JSON.stringify(allUsers));
 
-    alert("Signup successful. Please log in.");
+    showMessage("Signup successful. Please log in.", "success");
     switchForm("login");
   });
-
 
   loginFormElement.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -214,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const matchedUser = allUsers.find(user => user.email === email && user.password === password);
 
     if (!matchedUser) {
-      alert("Invalid email or password.");
+      showMessage("Invalid email or password.", "error");
       return;
     }
 
@@ -224,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loginSignupSection.style.display = "none";
     mainContactsSection.style.display = "flex";
     loadAllContacts();
+    showMessage("Login successful!", "success");
   });
 
   logoutButton.onclick = () => {
@@ -231,8 +243,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loggedInUserEmail = null;
     mainContactsSection.style.display = "none";
     loginSignupSection.style.display = "flex";
+    showMessage("Logged out successfully.", "success");
   };
-
 
   searchInputField.addEventListener("input", (e) => {
     const searchValue = e.target.value.toLowerCase();
