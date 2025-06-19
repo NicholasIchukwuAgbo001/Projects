@@ -22,7 +22,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 20000;
+  z-index: 1000;
   flex-direction: column;
   overflow: hidden;
 }
@@ -344,35 +344,51 @@ body {
   padding: 0.5rem 1rem;
 }
 
-#message-container {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 200000;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+#login-message-container,
+#signup-message-container,
+#main-message-container {
+  position: relative; 
+  z-index: 1;
+  margin-top: 10px;
 }
+
 
 .message {
-  padding: 1rem;
-  border-radius: 6px;
-  font-weight: bold;
-  color: #fff;
-  animation: fadeOut 5s forwards;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 10px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  animation: fadeOut 5s ease forwards;
+  margin-bottom: 8px;
+  line-height: 1.4;
 }
 
+/* Success message style */
 .message.success {
-  background-color: #4caf50;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
+/* Error message style */
 .message.error {
-  background-color: #f44336;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
+/* Animation to fade out after delay */
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-10px); }
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }

@@ -21,14 +21,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  function showMessage(message, type = "success") {
-    const container = document.getElementById("message-container");
-    const msg = document.createElement("div");
-    msg.className = `message ${type}`;
-    msg.textContent = message;
-    container.appendChild(msg);
-    setTimeout(() => msg.remove(), 5000);
-  }
+function showMessage(message, type = "success", context = "main") {
+  const containers = {
+    login: document.getElementById("login-message-container"),
+    signup: document.getElementById("signup-message-container"),
+    main: document.getElementById("main-message-container")
+  };
+
+  const container = containers[context];
+  if (!container) return;
+
+  const msg = document.createElement("div");
+  msg.className = `message ${type}`;
+  msg.textContent = message;
+  container.appendChild(msg);
+  setTimeout(() => msg.remove(), 5000);
+}
 
   const getUserStorageKey = (email) => `contacts_${email}`;
 
@@ -48,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     contactsTableBody.innerHTML = "";
     savedContacts.forEach(contact => addContactToTable(contact));
     enableDeleteButtons();
-    enableEditButtons();
     updateContactCount();
   };
 
@@ -67,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <td>${contact.phone}</td>
       <td>${contact.job}</td>
       <td>
-        <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
       </td>
     `;
@@ -87,33 +93,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  const enableEditButtons = () => {
-    contactsTableBody.querySelectorAll(".edit-btn").forEach(button => {
-      button.onclick = () => {
-        const row = button.closest("tr");
-        const contactInfo = {
-          name: row.children[0].textContent,
-          email: row.children[1].textContent,
-          phone: row.children[2].textContent,
-          job: row.children[3].textContent,
-        };
-        openContactForm(contactInfo, row);
-      };
-    });
-  };
-
-  const openContactForm = (existingContact = null, rowToUpdate = null) => {
+  const openContactForm = () => {
     const overlay = document.createElement("div");
     overlay.classList.add("modal-overlay");
 
     overlay.innerHTML = `
       <div class="modal">
-        <h3>${existingContact ? "Edit" : "Create"} Contact</h3>
-        <label>Name:<br><input type="text" id="contact-name" value="${existingContact?.name || ''}" /></label><br><br>
-        <label>Phone:<br><input type="text" id="contact-phone" value="${existingContact?.phone || ''}" /></label><br><br>
-        <label>Email (optional):<br><input type="text" id="contact-email" value="${existingContact?.email || ''}" /></label><br><br>
-        <label>Job Title & Company (optional):<br><input type="text" id="contact-job" value="${existingContact?.job || ''}" /></label><br><br>
-        <button id="save-contact">${existingContact ? "Update" : "Save"}</button>
+        <h3>Create Contact</h3>
+        <label>Name:<br><input type="text" id="contact-name" /></label><br><br>
+        <label>Phone:<br><input type="text" id="contact-phone" /></label><br><br>
+        <label>Email (optional):<br><input type="text" id="contact-email" /></label><br><br>
+        <label>Job Title & Company (optional):<br><input type="text" id="contact-job" /></label><br><br>
+        <button id="save-contact">Save</button>
         <button id="cancel-contact">Cancel</button>
       </div>
     `;
@@ -140,26 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (rowToUpdate) {
-        rowToUpdate.innerHTML = `
-          <td>${name}</td>
-          <td>${email}</td>
-          <td>${phone}</td>
-          <td>${job}</td>
-          <td>
-            <button class="edit-btn">Edit</button>
-            <button class="delete-btn">Delete</button>
-          </td>
-        `;
-        showMessage("Contact updated", "success");
-      } else {
-        addContactToTable({ name, phone, email, job });
-        showMessage("Contact added", "success");
-      }
+      addContactToTable({ name, phone, email, job });
+      showMessage("Contact added", "success");
 
       overlay.remove();
       enableDeleteButtons();
-      enableEditButtons();
       saveAllContacts();
       updateContactCount();
     };
