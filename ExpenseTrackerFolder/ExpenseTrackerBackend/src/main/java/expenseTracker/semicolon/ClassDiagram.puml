@@ -1,0 +1,20 @@
+@startuml
+' Simple Class Diagram for Expense Tracker Backend
+
+class User {
+  id: String
+  name: String
+  email: String
+  password: String
+  age: int
+}
+
+class Transaction {
+  id: String
+  userId: String
+  description: String
+  amount: double
+}
+
+User "1" -- "*" Transaction : owns >
+@enduml

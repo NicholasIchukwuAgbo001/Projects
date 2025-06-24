@@ -116,7 +116,7 @@ class UserServiceImplTest {
         RegisterRequest request = new RegisterRequest();
         request.setName("Nicholas");
         request.setEmail("niko@gmail.com");
-        request.setPassword("p".repeat(100));
+        request.setPassword("1122".repeat(100));
 
         AppException ex = assertThrows(AppException.class,
                 () -> userService.registerUser(request));

@@ -1,5 +1,4 @@
 const BASE_URL = "http://localhost:4466/api";
-
 const createContactButton = document.querySelector(".create-contact-btn");
 const contactsTableBody = document.querySelector(".contacts-table tbody");
 const contactCountDisplays = document.querySelectorAll(".count");
@@ -152,7 +151,7 @@ signupFormElement.onsubmit = async e => {
   const password = document.getElementById("signup-password").value.trim();
   const confirmPassword = document.getElementById("signup-confirm-password").value.trim();
   if (!emailRegex.test(email)) return showMessage("Invalid email.", "error", "signup");
-  if (password.length < 4 || password.length > 16) return showMessage("Password must be 4-16 chars.", "error", "signup");
+  if (password.length < 4 || password.length > 16) return showMessage("Password must be 4-16 characters.", "error", "signup");
   if (password !== confirmPassword) return showMessage("Passwords do not match.", "error", "signup");
   try {
     const res = await fetch(`${BASE_URL}/auth/register`, {

@@ -77,9 +77,9 @@ function validatePasswordLength(password) {
 }
 
 function createTransactionElement(transaction) {
-  const li = document.createElement("li");
-  li.classList.add("transaction", transaction.amount > 0 ? "income" : "expense");
-  li.style.width = "83%";
+  const liTag = document.createElement("li");
+  liTag.classList.add("transaction", transaction.amount > 0 ? "income" : "expense");
+  liTag.style.width = "83%";
 
   const descSpan = document.createElement("span");
   descSpan.textContent = transaction.description;
@@ -97,10 +97,10 @@ function createTransactionElement(transaction) {
   deleteBtn.addEventListener("click", () => removeTransaction(transaction.id));
 
   amountSpan.appendChild(deleteBtn);
-  li.appendChild(descSpan);
-  li.appendChild(amountSpan);
+  liTag.appendChild(descSpan);
+  liTag.appendChild(amountSpan);
 
-  return li;
+  return liTag;
 }
 
 function updateTransactionList(filtered = transactions) {
@@ -130,15 +130,15 @@ async function login() {
   }
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
+    const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (res.ok && data.success) {
+    if (response.ok && data.success) {
       showMessage(`Welcome ${data.name}`, "success", "login");
       saveCurrentUser(email, data.name);
       showAppContainer(data.name);
@@ -173,21 +173,16 @@ async function signup() {
     return;
   }
 
-  if (age <= 0) {
-    showMessage("Please enter a valid age.", "error", "signup");
-    return;
-  }
-
   try {
-    const res = await fetch(`${BACKEND_URL}/api/auth/signup`, {
+    const response = await fetch(`${BACKEND_URL}/api/auth/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, name, age }),
     });
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (res.ok && data.success) {
+    if (response.ok && data.success) {
       showMessage("Signup successful! You can now log in.", "success", "signup");
       switchForm("login");
       signupForm.reset();
@@ -208,10 +203,10 @@ async function loadTransactions() {
   }
 
   try {
-    const res = await fetch(`${BACKEND_URL}/api/transactions/${currentUser}`);
-    const data = await res.json();
+    const response = await fetch(`${BACKEND_URL}/api/transactions/${currentUser}`);
+    const data = await response.json();
 
-    if (res.ok && data.success) {
+    if (response.ok && data.success) {
       transactions = data.transactions || [];
       updateTransactionList();
       updateSummary();
@@ -308,13 +303,13 @@ logoutBtn.addEventListener("click", () => {
   updateSummary();
 });
 
-loginForm.addEventListener("submit", e => {
-  e.preventDefault();
+loginForm.addEventListener("submit", element => {
+  element.preventDefault();
   login();
 });
 
-signupForm.addEventListener("submit", e => {
-  e.preventDefault();
+signupForm.addEventListener("submit", element => {
+  element.preventDefault();
   signup();
 });
 

@@ -1,0 +1,11 @@
+@startuml
+actor User
+package "To-Do List" {
+User --> (Update Tasks)
+User --> (Delete Tasks)
+User --> (View Tasks)
+User --> (Add Tasks)
+User --> (Login)
+User --> (Register)
+}
+@enduml

@@ -1,11 +1,10 @@
-@startuml UseCaseDiagram
-
+@startuml
 actor User
-
-User --> (Register)
-User --> (Login)
-User --> (Add Transaction)
-User --> (View Transactions)
+package "Expense Tracker" {
 User --> (Delete Transaction)
-
+User --> (View Transactions)
+User --> (Add Transaction)
+User --> (Login)
+User --> (Register)
+}
 @enduml
